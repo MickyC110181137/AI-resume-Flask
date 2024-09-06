@@ -7,8 +7,11 @@ pip install -r requirements.txt
 flask 教學
 https://medium.com/@kenAaa/python-flask-%E6%A1%86%E6%9E%B6%E5%88%9D%E6%8E%A2-%E7%A8%8B%E5%BC%8F%E5%B0%8F%E7%99%BD%E4%B9%9F%E8%83%BD%E4%B8%8A%E6%89%8B%E7%9A%84api%E5%AF%A6%E4%BD%9C-bafd8aa2edfe
 
-api暫時只有raw的json格式
+
 get http://127.0.0.1:5000/user
+get http://127.0.0.1:8080/AIspeak
+get http://127.0.0.1:8080/resumeData
+
 post http://127.0.0.1:5000/user
 {
     "name":"Micky"
@@ -16,4 +19,30 @@ post http://127.0.0.1:5000/user
 post http://127.0.0.1:5000/user/Micky/message
 {
     "message": "08/17 03:19pm"
+}
+
+
+post http://127.0.0.1:8080/resumeData
+{
+    "resumeName":"Kevin",
+    "resumeField1":"javascript, react",
+    "resumeField2":"man",
+    "resumeField3":"talent, handsome",
+    "resumeAutobiography":"dskljfkdsjfkdsjfdskfsadfsdfsdafewfewr"
+}
+post http://127.0.0.1:8080/AIspeak/aiQuestion
+{
+    "q1": "44444444444444444444 you good?",
+    "q2": "333333333333333",
+    "q3": "22222222222222",
+    "q4": "11111111111111",
+    "q5": "hhhhhhhh3333333333333333hhhhhhhh"
+}
+post http://127.0.0.1:8080/AIspeak/userAnswer
+{
+    "a1": "ffffffffffffffff you good?",
+    "a2": "sssssssssssssssss",
+    "a3": "ddddddddddddd",
+    "a4": "eeeeeeeeeeeeee",
+    "a5": "jujjjjjjjjjjjjjjjjjjjjjjj"
 }
