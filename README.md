@@ -11,8 +11,8 @@ GET http://127.0.0.1:8080/AIspeak/get_Json/<filename>
 
 DELETE http://127.0.0.1:8080//AIspeak/delete_Json/<filename>  
 
-這個是我用來改面試官的問題
-POST http://127.0.0.1:8080/AIspeak/aiQuestion
+這個是我用來改面試官的問題  
+POST http://127.0.0.1:8080/AIspeak/aiQuestion  
 {  
     "q1": "44444444444444444444 you good?",  
     "q2": "333333333333333",  
@@ -21,12 +21,12 @@ POST http://127.0.0.1:8080/AIspeak/aiQuestion
     "q5": "hhhhhhhh3333333333333333hhhhhhhh"  
 }  
 
-這個是賴你用來傳資料給我
-POST http://127.0.0.1:8080/AIspeak/resumeData
-{
-    "resumeName":"Kevin",
-    "resumeField1":"javascript, react",
-    "resumeField2":"man",
-    "resumeField3":"talent, handsome",
-    "resumeAutobiography":"dskljfkdsjfkdsjfdskfsadfsdfsdafewfewr"
-}
+這個是賴你用來傳資料給我  
+POST http://127.0.0.1:8080/AIspeak/resumeData  
+{  
+    "resumeName":"Kevin",  
+    "resumeField1":"javascript, react",  
+    "resumeField2":"man",  
+    "resumeField3":"talent, handsome",  
+    "resumeAutobiography":"dskljfkdsjfkdsjfdskfsadfsdfsdafewfewr"  
+}  
