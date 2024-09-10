@@ -12,16 +12,16 @@ import uuid
 #     )
 
 # 讀取 JSON 檔案
-def load_users():
-    with open("./json/users.json", "r", encoding="utf-8") as file:
-        return json.load(file)
+# def load_users():
+#     with open("./json/users.json", "r", encoding="utf-8") as file:
+#         return json.load(file)
 
-def save_users(users):
-    with open("./json/users.json", "w", encoding="utf-8") as file:
-        json.dump(users, file, ensure_ascii=False, indent=4)
+# def save_users(users):
+#     with open("./json/users.json", "w", encoding="utf-8") as file:
+#         json.dump(users, file, ensure_ascii=False, indent=4)
 
-# 加載JSON檔
-users = load_users()
+# # 加載JSON檔
+# users = load_users()
 
 
 app = Flask(__name__)
