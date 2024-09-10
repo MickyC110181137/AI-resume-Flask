@@ -1,6 +1,8 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import json
+import os
+import uuid
 
 # Set gpu_layers to the number of layers to offload to GPU. Set to 0 if no GPU acceleration is available on your system.
 # llm = AutoModelForCausalLM.from_pretrained(
@@ -13,112 +15,136 @@ import json
 def load_users():
     with open("./json/users.json", "r", encoding="utf-8") as file:
         return json.load(file)
-def load_resumeData():
-    with open("./json/resumeData.json", "r", encoding="utf-8") as file:
-        return json.load(file)
-def load_AIspeak():
-    with open("./json/AIspeak.json", "r", encoding="utf-8") as file:
-        return json.load(file)
 
 def save_users(users):
     with open("./json/users.json", "w", encoding="utf-8") as file:
         json.dump(users, file, ensure_ascii=False, indent=4)
-def save_resumeData(data_storage):
-    with open("./json/resumeData.json", "w", encoding="utf-8") as file:
-        json.dump(data_storage, file, ensure_ascii=False, indent=4)
-def save_AIspeak(AIspeak):
-    with open("./json/AIspeak.json", "w", encoding="utf-8") as file:
-        json.dump(AIspeak, file, ensure_ascii=False, indent=4)
 
 # 加載JSON檔
 users = load_users()
-data_storage = load_resumeData()
-AIspeak = load_AIspeak()
+
+
 app = Flask(__name__)
 CORS(app)
 
-# ------------------Kevin前端JSON 欄位資料------------------------------
-@app.route("/resumeData", methods=["GET"])
-def get_resumeData():
-    if request.method == 'GET':
-        return jsonify(data_storage), 200
-    else:
-        return jsonify({"message": "No data available"}), 404
 
-@app.route("/resumeData", methods=["POST"])
+# ------------------Kevin前端JSON 欄位資料------------------------------
+@app.route("/AIspeak/resumeData", methods=["POST"])
 def add_resume():
-    new_data = request.json
-    # 確保有數據可以填充
     if request.method == 'POST':
-        # 填充數據到第一個resumeData結構中
-        resume = data_storage[0]["resumeData"][0]
-        # 使用字典更新現有字段
-        resume.update({key: new_data.get(key, resume.get(key)) for key in resume})
+        data = request.get_json()
+        save_directory = './json'
+        if not os.path.exists(save_directory):
+            os.makedirs(save_directory)
+        filename = f"{uuid.uuid4()}.json"
+        filepath = os.path.join(save_directory, filename)
+        
+        formatted_data = [
+            {
+                "resumeData": [
+                    {
+                        "resumeName": data.get("resumeName", ""),
+                        "resumeField1": data.get("resumeField1", ""),
+                        "resumeField2": data.get("resumeField2", ""),
+                        "resumeField3": data.get("resumeField3, handsome", ""),
+                        "resumeAutobiography": data.get("resumeAutobiography", "")
+                    }
+                ]
+            }
+        ]
+
         # 保存數據
-        save_resumeData(data_storage)
-        return jsonify({"message": "Data updated successfully"}), 200
+        with open(filepath, 'w') as json_file:
+            json.dump(formatted_data, json_file)
+        
+        return jsonify({"message": "JSON file created", "filename": filename}), 201
+        
     else:
         return jsonify({"message": "No data structure available to update"}), 404
     
 
 # ----------------------------面試官JSON ------------------------------
-@app.route("/AIspeak", methods=["GET"])
-def get_AIspeak():
-    if request.method == 'GET':
-        return jsonify(AIspeak), 200
-    else:
-        return jsonify({"message": "No data available"}), 404
-
 @app.route("/AIspeak/aiQuestion", methods=["POST"])
 def add_aiQuestiion():
     if request.method == 'POST':
-        data = request.json  # 獲取POST請求中的JSON數據
-        # 更新 aiQuestion
-        question = AIspeak[0]["aiQuestion"][0]
-        question.update({key: data.get(key, question.get(key)) for key in question})
-        save_AIspeak(AIspeak)
-        return jsonify({"message": "Data updated successfully"}), 200
-    else:
-        return jsonify({"message": "No data available"}), 404
+        data = request.get_json()
+        save_directory = './json'
+        if not os.path.exists(save_directory):
+            os.makedirs(save_directory)
+        filename = f"{uuid.uuid4()}.json"
+        filepath = os.path.join(save_directory, filename)
+        
+        formatted_data = [
+            {
+                "aiQuestion": [
+                    {
+                        "q1": data.get("q1", ""),
+                        "q2": data.get("q2", ""),
+                        "q3": data.get("q3", ""),
+                        "q4": data.get("q4", ""),
+                        "q5": data.get("q5", "")
+                    }
+                ]
+            }
+        ]
 
-@app.route("/AIspeak/userAnswer", methods=["POST"])
-def add_userAnswser():
-    if request.method == 'POST':
-        data = request.json  # 獲取POST請求中的JSON數據
-        # 更新 aiQuestion
-        answer = AIspeak[0]["userAnswer"][0]
-        answer.update({key: data.get(key, answer.get(key)) for key in answer})
-        save_AIspeak(AIspeak)
-        return jsonify({"message": "Data updated successfully"}), 200
+        # 保存數據
+        with open(filepath, 'w') as json_file:
+            json.dump(formatted_data, json_file)
+        
+        return jsonify({"message": "JSON file created", "filename": filename}), 201
+        
     else:
-        return jsonify({"message": "No data available"}), 404
+        return jsonify({"message": "No data structure available to update"}), 404
+    
+@app.route('/AIspeak/get_Json/<filename>', methods=['GET'])
+def get_json(filename):
+    directory = './json'
+    try:
+        return send_from_directory(directory, filename)
+    except FileNotFoundError:
+        return jsonify({"error": "File not found"}), 404
+    
+@app.route('/AIspeak/delete_Json/<filename>', methods=['DELETE'])
+def delete_json(filename):
+    directory = './json'
+    file_path = os.path.join(directory, filename)
+    try:
+        os.remove(file_path)
+        return jsonify({"message": "File deleted successfully"}), 200
+    except FileNotFoundError:
+        return jsonify({"error": "File not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 # --------------------初版-----------------------------------------------
 # 獲取所有用戶的信息
-@app.route("/resume", methods=["GET"])
-def get_user():
-    return jsonify({"users": users})
+# @app.route("/resume", methods=["GET"])
+# def get_user():
+#     return jsonify({"users": users})
 
-# 創建新的用戶
-@app.route("/resume", methods=["POST"])
-def create_user():
-    request_data = request.get_json()
-    new_user = {"name": request_data["name"], "message": [], "llm_anwser": []}
-    users.append(new_user)
-    save_users(users)  # 保存到 JSON 檔案
-    return jsonify(new_user), 201
+# # 創建新的用戶
+# @app.route("/resume", methods=["POST"])
+# def create_user():
+#     request_data = request.get_json()
+#     new_user = {"name": request_data["name"], "message": [], "llm_anwser": []}
+#     users.append(new_user)
+#     save_users(users)  # 保存到 JSON 檔案
+#     return jsonify(new_user), 201
 
-# 在指定用戶中添加訊息
-@app.route("/resume/<string:name>/message", methods=["POST"])
-def add_message_to_user(name):
-    request_data = request.get_json()
-    for user in users:
-        if user["name"] == name:
-            new_message = request_data["message"]
-            user["message"].append(new_message)
-            save_users(users)  # 保存到 JSON 檔案
-            return jsonify({"message": f"Course {new_message} added to user {name}"}), 201
-    return jsonify({"message": "usesr not found"}), 404
+# # 在指定用戶中添加訊息
+# @app.route("/resume/<string:name>/message", methods=["POST"])
+# def add_message_to_user(name):
+#     request_data = request.get_json()
+#     for user in users:
+#         if user["name"] == name:
+#             new_message = request_data["message"]
+#             user["message"].append(new_message)
+#             save_users(users)  # 保存到 JSON 檔案
+#             return jsonify({"message": f"Course {new_message} added to user {name}"}), 201
+#     return jsonify({"message": "usesr not found"}), 404
+
+# ---------------------------------------------------------------------
 
 
 
