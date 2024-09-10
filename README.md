@@ -7,9 +7,9 @@
 使用POST會回傳一個uuid.json, 再用uuid.json, 去get JSON  
 ![image](https://github.com/MickyC110181137/AI-resume-Flask/blob/main/txt/postman.png)  
 
-GET http://127.0.0.1:8080/AIspeak/get_Json/<filename>  
+GET http://127.0.0.1:8080/AIspeak/get_Json/檔名.json 
 
-DELETE http://127.0.0.1:8080//AIspeak/delete_Json/<filename>  
+DELETE http://127.0.0.1:8080//AIspeak/delete_Json/檔名.json  
 
 這個是我用來改面試官的問題  
 POST http://127.0.0.1:8080/AIspeak/aiQuestion  
